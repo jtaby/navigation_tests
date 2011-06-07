@@ -1,0 +1,3 @@
+[submodule "scrollability"]
+	path = scrollability
+	url = git@github.com:jtaby/scrollability.git
