@@ -1,162 +1,48 @@
 <html>
 	<head>
 		<title>Navigation Tests</title>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script> 
-<script type="text/javascript" src="scrollability/scrollability.js"></script>
-<meta name="viewport" content="width=device-width,maximum-scale=1.0" />
+
+    <meta name="viewport" content="width=device-width,maximum-scale=1.0" />
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script> 
+    <script type="text/javascript" src="scrollability/scrollability.js"></script>
+    <script src="formfactor.js"></script>
+    <script src="base.js"></script>
+
+    <link rel="stylesheet" href="base.css" type="text/css" media="screen" charset="utf-8">
+
+  </head>
 	<body>
 	  
-	  <div class="navigation-bar">
-	    <div class="navigation-button" onclick="goBack()">
-	      Back
-	    </div>
-	  </div>
-	  <div class="content">
-	    
-	  </div>
-	  
-	<style type="text/css" media="screen">
-	  body, .container {
-	    width:320px;
-	    margin:0;
-	    -webkit-user-select:none;
-	  }
-    .item {
-      padding:15px 5px;
-      font-size:18px;
-      font-family: Helvetica;
-      background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0.3, rgb(203,210,214)),
-        color-stop(0.8, rgb(232,234,235))
-      );
-      background-image: -moz-linear-gradient(
-        center bottom,
-        rgb(203,210,214) 30%,
-        rgb(232,234,235) 80%
-      );
-    }
-    
-    .item.selected {
-      background: #7abcff; /* Old browsers */
-      background: -moz-linear-gradient(top, #7abcff 0%, #60abf8 44%, #4096ee 100%); /* FF3.6+ */
-      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7abcff), color-stop(44%,#60abf8), color-stop(100%,#4096ee)); /* Chrome,Safari4+ */
-      background: -webkit-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* Chrome10+,Safari5.1+ */
-      background: -o-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* Opera11.10+ */
-      background: -ms-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* IE10+ */
-      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 ); /* IE6-9 */
-      background: linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* W3C */
-    }
-    
-    .container {
-      position:absolute;
-      top:0;
-      left:0;
-      -webkit-transition: -webkit-transform 0.3s ease-in-out;
-    }
-    
-    .on-right {
-      -webkit-transform: translate3d(320px, 0, 0);
-    }
-    
-    .on-right.shown {
-      -webkit-transform: translate3d(0px, 0, 0);
-    }
-    
-    .on-left {
-      -webkit-transform: translate3d(-320px, 0, 0);
-    }
+    <div id="iphone" class="formfactor">
+      <div class="navigation-bar">
+        <div class="navigation-button" onclick="goBack()">
+          Back
+        </div>
+      </div>
+      <div class="content">
+        
+      </div>
+    </div>
 
-	</style>
-	
-  <script type="text/javascript"> 
-    var node_num = 0;
-    var container_list = [];
-    
-    var goBack = function(){
-      var container = container_list.pop()
-    }
-    
-    var generateList = function(num, container) {
-      if (container === undefined) {
-        var container = $(document.createElement('div'))
-        container.addClass("container") 
-      }
+    <div id="ipad" class="formfactor">
+      <div id="splitview">
+        <div id="leftside">
+          <div class="navigation-bar">
+            <div class="navigation-button" onclick="goBack()">
+              Back
+            </div>
+          </div>
+          <div class="content">
+            
+          </div>
+          
+        </div>            
+        <div id="rightside">
+          
+        </div>            
+      </div>
+    </div>
       
-      var html = ""
-      for (var i = 0, len = num; i < len; i++) {
-        html += '<div class="item">node' + node_num + '-item' + i + '</div>';
-      }
-      
-      container.html(html)
-      
-      node_num++
-      
-      $('.content').append(container)
-    }
-    
-    var pushNewList = function() {
-      
-      var scrollTop = document.body.scrollTop;
-      
-      var container = $(document.createElement('div'))
-      container.addClass("container on-right")
-      generateList(100, container)
-      container.css('top',scrollTop);
-      
-      container.bind('webkitTransitionEnd',function(evt){
-        container.css('top',0);
-        document.body.scrollTop = 0;
-      })
-      
-      setTimeout(function(){
-        var shown = $('.shown')
-        container_list.push(shown)
-        shown.addClass('on-left').removeClass('shown')
-        container.addClass('shown')
-        shown.removeClass('shown')
-      },0)
-    }
-    
-    $('.item').live('touchstart', function(evt) {
-      $(this).addClass('selected')
-    })
-    
-    $('.item').live('touchmove', function(evt) {
-      $(this).removeClass('selected')
-    })
-    
-    $('.item').live('touchcancel', function(evt) {
-      $(this).removeClass('selected')
-    })
-    
-    $('.item').live('touchend', function(evt) {
-      if ($(evt.target).hasClass('selected')) {
-        evt.preventDefault()
-        $(this).removeClass('selected')
-        pushNewList()
-      }
-    })
-    
-    $('.item').live('mousedown', function(evt) {
-      evt.preventDefault()
-      $(this).addClass('selected')
-    })
-    
-    $('.item').live('mouseup', function(evt) {
-      if ($(evt.target).hasClass('selected')) {
-        evt.preventDefault()
-        $(this).removeClass('selected')
-        pushNewList()
-      }
-    })
-  
-    $(document).ready(function() {
-      return generateList(100)
-    })
-      
-  </script> 
 	</body>
 </html>
